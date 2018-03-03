@@ -1,0 +1,6 @@
+dos.txt CRLF
+eol.txt LF
+mac.txt CR
+unix.txt LF
+binary LONG+8BIT+CTRL+NULL+CR+LF
+binary2 LONG+8BIT+CTRL+NULL+TAB+CR+LF

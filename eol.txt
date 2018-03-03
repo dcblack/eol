@@ -1,0 +1,69 @@
+NAME
+    eol - determines type of end of line characters in one or more files.
+
+SYNOPSIS
+    eol "[-q][-c][-v][-w]" [-0] *[FILELIST]*
+
+    eol -V
+
+DESCRIPTION
+    eol echoes its results to STDOUT as a string of + separated fields as
+    follows:
+
+    8BIT
+        Indicates characters with ASCI values greater than 127 found.
+
+    CR  Indicates ASCII carriage return (CR) character (0x13) found.
+
+    CRLF
+        Indicates CR immediately followed by LF found. Mutually exclusive
+        from CR or LF alone.
+
+    CTRL
+        Indicates control characters other than LF,CR,TAB,NUL,^Z.
+
+    LF  Indicates ASCII line feed (LF) character (0x10) found.
+
+    LONG
+        Indicates at least one line greater than 132 chars.
+
+    NONE
+        Indicates neither CRLF, CR nor LF found.
+
+    TAB Indicates one or more TAB characters found. In parentheses is the
+        number of tabs found, and the maximum number of tabs in a single
+        line.
+
+    DEL Indicates one or more bytes containing 127 (0x7F) found.
+
+    NULL
+        Indicates one or more bytes containing zero (0x00) found. In
+        parentheses is the number of nulls found.
+
+    WIDE
+        Indicates at least one line between 80 & 132 chars.
+
+OPTIONS
+    -0  Report the locations of the first several NUL's found (single file
+        only).
+
+    "-c"
+        Display count statistics for various elements (e.g. # tabs, nulls,
+        etc).
+
+    "-h"
+        Basic usage.
+
+    "-q"
+        Quick check based on the first 1024 characters.
+
+    "-v"
+        Display verbosely. Includes the maximum line widths.
+
+EXAMPLES
+    % eol "-q" *txt b* dos.txt CRLF mac.txt CR unix.txt LF binary
+    LONG+8BIT+CTRL+NULL+CR+LF binary2 LONG+8BIT+CTRL+NULL+CR+LF
+
+AUTHOR
+    David C Black
+

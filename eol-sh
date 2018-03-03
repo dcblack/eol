@@ -1,0 +1,22 @@
+#!/bin/bash
+
+os=$(uname -s)
+hw=$(uname -m)
+
+case "$os-$hw" in
+  Darwin-i?86)
+    eol-mach-i386 $@
+    ;;
+  Darwin-Power*)
+    eol-mach-ppc $@
+    ;;
+  Linux-i?86)
+    eol-elf-linux $@
+    ;;
+  Sun*-sparc*)
+    eol-elf-sparc $@
+    ;;
+  *)
+    echo "Unknown OS - unable to determine executable";
+    break;;
+esac
