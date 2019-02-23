@@ -5,17 +5,21 @@ REVN = 1.3
 os:=$(shell uname -s)
 hw:=$(shell uname -m)
 ifeq "$(os)" "Darwin"
+ ifeq "$(hw)" "x86_64"
+    ARCH:=mach-x86_64
+ else
   ifeq "$(hw)" "i386"
     ARCH:=mach-i386
   else
     ARCH:=mach-ppc
   endif
+ endif
 else
-ifeq "$(os)" "Linux"
+ ifeq "$(os)" "Linux"
     ARCH:=elf-i386
-else
+ else
     ARCH:=elf-sparc
-endif
+ endif
 endif
 
 INSTALL_DIR=/eda/eklect/default

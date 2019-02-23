@@ -1,20 +1,24 @@
 #!/bin/bash
 
+pgm=$(echo $0|sed -e 's/-.*//')
 os=$(uname -s)
 hw=$(uname -m)
 
 case "$os-$hw" in
+  Darwin-x86_64)
+    $pgm-mach-x86_64 $@
+    ;;
   Darwin-i?86)
-    eol-mach-i386 $@
+    $pgm-mach-i386 $@
     ;;
   Darwin-Power*)
-    eol-mach-ppc $@
+    $pgm-mach-ppc $@
     ;;
   Linux-i?86)
-    eol-elf-linux $@
+    $pgm-elf-linux $@
     ;;
   Sun*-sparc*)
-    eol-elf-sparc $@
+    $pgm-elf-sparc $@
     ;;
   *)
     echo "Unknown OS - unable to determine executable";

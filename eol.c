@@ -486,7 +486,7 @@ int main( int argc, char* argv[] )
             debug = 1;
         }
         else if ( strcmp( argv[1], "-h" ) == 0 ) {
-            ( void ) printf( "USAGE: eol [-q] [-0] [FILELIST]\n" );
+            ( void ) printf( "USAGE: eol [-q][-c][-v][-w] [-0] [FILELIST]\n" );
             return ( 0 );
         }
         else if ( strcmp( argv[1], "-help" ) == 0 ) {
