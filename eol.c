@@ -112,7 +112,6 @@ David C Black
 
  ************************************************************** */
 
-#include <sys/types.h>
 #include <sys/stat.h>
 #include <stdio.h>
 #include <string.h>
@@ -120,22 +119,18 @@ David C Black
 #include <stdlib.h>
 
 static char const rcsid[] =
-    "$Id: eol.c,v 1.0 2018/02/28 22:51:37 dcblack Exp $";
+    "$Id: eol.c,v 1.1 2020/09/25 16:24:45 dcblack Exp $";
 int verbose = 0;
 int debug = 0;
-int tokens = 0;
-int counts = 0;
-char* ignore;
-
-int stat();
+size_t tokens = 0;
+size_t counts = 0;
 
 #define MAXNULLS  16
 #define MAXTEST 1024
-#define MAXLINE  132 /* maximum allowable line length */
 
-long int incr( long int* value )
+size_t incr( size_t* value )
 {
-    long int result = ( *value ) + 1;
+    size_t result = ( *value ) + 1;
 
     if ( result > 0 ) {
         *value = result;    // don't allow overflow
@@ -144,24 +139,24 @@ long int incr( long int* value )
     return *value;
 }
 
-long long size = 0;
+ssize_t size = 0;
 int prev_c;
-long int line_len;
-long int line_max;
-long int token_len;
-long int token_max;
-long int ident_len;
-long int ident_max;
-long int nuls; /* Number of "\0"s   encountered */
-long int tabs; /* Number of "\t"s   encountered */
-long int tabc; /* Number of "\t"s   since last EOL */
-long int tabm; /* Max number of "\t"s between EOL's */
-long int dels; /* Number of "\377"s encountered */
-long int bit8; /* Number of >127's  encountered */
-long int ctls; /* Number of <32's   encountered */
-long int cr;   /* Number of "\r"s   encountered */
-long int lf;   /* Number of "\n"s   encountered */
-long int cl;   /* Number of "\r\n"s encountered */
+size_t line_len;
+size_t line_max;
+size_t token_len;
+size_t token_max;
+size_t ident_len;
+size_t ident_max;
+size_t nuls; /* Number of "\0"s   encountered */
+size_t tabs; /* Number of "\t"s   encountered */
+size_t tabc; /* Number of "\t"s   since last EOL */
+size_t tabm; /* Max number of "\t"s between EOL's */
+size_t dels; /* Number of "\377"s encountered */
+size_t bit8; /* Number of >127's  encountered */
+size_t ctls; /* Number of <32's   encountered */
+size_t cr;   /* Number of "\r"s   encountered */
+size_t lf;   /* Number of "\n"s   encountered */
+size_t cl;   /* Number of "\r\n"s encountered */
 short high_bit;
 short ctrl_char;
 
@@ -267,8 +262,8 @@ void findeol( int maxtest, int findnulls, FILE* fp )
                     incr( &nuls );
 
                     if ( findnulls-- > 0 ) {
-                        int lineno = cr + lf + cl;
-                        ( void ) printf( "Null in column %ld on line %d\n", line_len, lineno );
+                        size_t lineno = cr + lf + cl;
+                        ( void ) printf( "Null in column %ld on line %zu\n", line_len, lineno );
                     }/*endif*/
 
                     incr( &line_len );
@@ -280,13 +275,10 @@ void findeol( int maxtest, int findnulls, FILE* fp )
                     incr( &line_len );
                     break;
 
-                case ' ': /* <SPACE> */
-                    incr( &line_len );
-                    break;
-
-                case '\v':   /* <VERTICAL-TAB> */
-                case '\b':   /* <BACK-SPACE> */
-                case '\f':   /* <FORM-FEED> */
+                case ' ':  /* <SPACE> */
+                case '\v': /* <VERTICAL-TAB> */
+                case '\b': /* <BACK-SPACE> */
+                case '\f': /* <FORM-FEED> */
                     incr( &line_len );
                     break;
 
@@ -440,7 +432,7 @@ void testeol( char msg[1024] , int maxtest , int findnulls , FILE* fp )
             int samples = 0;
 
             while ( samples < 10 ) {
-                long int offset = rand() % size;
+                ssize_t offset = random() % size;
 
                 if ( offset < 2 * maxtest || offset > size - 2 * maxtest ) {
                     continue;
@@ -498,8 +490,8 @@ int main( int argc, char* argv[] )
         else if ( strcmp( argv[1], "-c" ) == 0 ) {
             counts = 1; /* request printing count statistics */
         }
-        else if ( strcmp( argv[1], "-v" ) == 0 ) {
-            verbose = 1; /* request verbose printout */
+        else if ( strcmp( argv[1], "-v" ) == 0 && verbose < 10) {
+            ++verbose; /* request verbose printout */
         }
         else if ( strcmp( argv[1], "-w" ) == 0 ) {
             tokens = 1; /* request token length statistics */
@@ -509,7 +501,7 @@ int main( int argc, char* argv[] )
         }
         else if ( strcmp( argv[1], "-a" ) == 0 ) {
             counts = 1; /* request printing count statistics */
-            verbose = 1; /* request verbose printout */
+            if (verbose < 10) ++verbose; /* request verbose printout */
         }
         else {
             ( void ) printf( "ERROR(eol): Unknown option %s ignored!\n", argv[1] );
