@@ -5,6 +5,9 @@ os=$(uname -s)
 hw=$(uname -m)
 
 case "$os-$hw" in
+  Darwin-arm64)
+    $pgm-mach-arm64 $@
+    ;;
   Darwin-x86_64)
     $pgm-mach-x86_64 $@
     ;;
